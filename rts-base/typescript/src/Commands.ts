@@ -1,4 +1,4 @@
-import { CheckIfMessageIsCommandAsync } from "./modules/CommandUtil";
+import { CommandUtil } from "./CommandUtil";
 
 const Chat = game.GetService("Chat");
 const Players = game.GetService("Players");
@@ -10,9 +10,12 @@ const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
     Player.LoadCharacter();
 });
 
+const CurrentUtils = new CommandUtil();
+
 export class CommandWorker {
     Player: Player;
     Message: string;
+    readonly LastCommand: string | null = "";
 
     constructor(Player: Player, Message: string) {
         this.Player = Player;
@@ -20,7 +23,7 @@ export class CommandWorker {
     }
 
     HandleCommand() {
-        if (CheckIfMessageIsCommandAsync(this.Message) == true) {
+        if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) == true) {
             const Isolated = string.sub(this.Message, 2, this.Message.size());
             const Arguments = Isolated.split(" "); // Split into elements for easier manipulation
             
