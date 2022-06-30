@@ -1,8 +1,12 @@
 import { CommandUtil } from "./CommandUtil";
+import { Data } from "./SysSettings";
 
 const Chat = game.GetService("Chat");
 const Players = game.GetService("Players");
 const Workspace = game.GetService("Workspace");
+const DataStoreService = game.GetService("DataStoreService");
+
+const MainDS = DataStoreService.GetDataStore(Data.Important.DataStoreName);
 
 const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
     task.wait(4);
@@ -20,6 +24,8 @@ export class CommandWorker {
     constructor(Player: Player, Message: string) {
         this.Player = Player;
         this.Message = Message;
+
+        // check if Data.Version is equal to the downloaded version from github
     }
 
     HandleCommand() {
@@ -197,6 +203,12 @@ export class CommandWorker {
                             }
                         }
                     }
+                } else if (Arguments[1].find("shutdown")) {
+                    Players.GetPlayers().forEach(function(Player, i) {
+                        const Date = os.date("*t", os.time());
+
+                        Player.Kick(Data.Messages.ShutdownMessage.format(Player.Name, Player.UserId, Date.hour, Date.min, Date.day, Date.month, Date.year));
+                    });
                 }
             } else {
                 return;

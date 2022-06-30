@@ -1,11 +1,14 @@
+import { Data } from "./SysSettings";
+
 const Workspace = game.Workspace;
 const Players = game.GetService("Players");
+const HttpService = game.GetService("HttpService");
 
 export class CommandUtil {
     constructor() {}
-
+    
     CheckIfMessageIsCommandAsync(String: string) {
-        if (String.sub(0, 1) == "/") {
+        if (String.sub(0, 1) == Data.CommandSettings.Prefix) {
             return true;
         } else {
             return false;
@@ -19,6 +22,14 @@ export class CommandUtil {
             const Player: Player | undefined = Players.GetPlayerFromCharacter(ExpectedCharacter);
 
             return Player?.Character
+        }
+    }
+
+    protected DoesCommandArgumentExist(Index: number, Arguments: Array<string>) { // Temporarily not used
+        if (Arguments[Index] != "" && Arguments[Index] != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
