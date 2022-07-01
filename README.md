@@ -70,6 +70,51 @@ Access the Releases from the right GitHub sidebar or by cloning the release usin
     wget --content-disposition https://github.com/alessandro-ilie/Roblox-OpenSourceCommands/archive/refs/tags/not-compiled.zip
 ```
 
+---
+
+## How to use
+
+Insert the ModuleScript inside **ServerScriptService** or inside a script whose parent is the Service
+
+**Script.lua**: (ServerScriptService Script written in Luau)
+
+```lua
+    local CommandWorker = require('module location') -- Replace (ex. script.Commands or script.Parent.Commands)
+
+    game.Players.PlayerAdded:Connect(function(Player: Player)
+        Player.Chatted:Connect(function(Message: string)
+            local Worker = CommandWorker.new(Player, Message)
+
+            Worker.HandleCommand()
+        end)
+    end)
+```
+
+**Script.ts**: (ServerScriptService Script in case you wanna use roblox-ts)
+
+```ts
+    import { CommandWorker } from 'wherever-you-put-the-module-in'
+
+    const Players = game.GetService("Players");
+
+    Players.PlayerAdded.Connect((Player) => {
+        Player.Chatted.Connect((Message) => {
+            const Worker = new CommandWorker(Player, Message);
+
+            Worker.HandleCommand();
+        })
+    })
+```
+
+## Customization 
+
+Inside the `Command` module you find `SysSettings` or `(src/SysSettings.ts)`.
+
+It contains the properties you can customize, make sure you don't mess up types or the property names / content.
+
+---
+
+
 ## Contributing 
 
 Feel free to suggest, fix, or write better solutions and make as many issues or pull requests as you want.
