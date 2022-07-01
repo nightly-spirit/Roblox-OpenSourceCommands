@@ -11,8 +11,20 @@ export class CommandUtil {
         if (String.sub(0, 1) == Data.CommandSettings.Prefix) {
             return true;
         } else {
-            return false;
+            return false;S
         }
+    }
+
+    protected CheckIfPlayerFromStringExists (Name: string) { // Temporarily not used
+        let Reciever: string | null = null;
+
+        Players.GetPlayers().forEach(function(Player, i) {
+            if (Player.Name.find(Name) || Player.DisplayName.find(Name)) {
+                Reciever = Player.Name;
+            }
+        });
+
+        return Reciever
     }
 
     protected CheckIfCharacterWithNameExists(Name: string) { // Temporarily not used
