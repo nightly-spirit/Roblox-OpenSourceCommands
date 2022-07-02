@@ -1,12 +1,12 @@
 import { CommandUtil } from "./CommandUtil";
-import { Data } from "./SysSettings";
+import { Settings } from "./SysSettings";
+import { Proxy } from "./Proxy";
 
 const Chat = game.GetService("Chat");
 const Players = game.GetService("Players");
 const Workspace = game.GetService("Workspace");
 const DataStoreService = game.GetService("DataStoreService");
-
-const MainDS = DataStoreService.GetDataStore(Data.Important.DataStoreName);
+const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
 const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
     task.wait(4);
@@ -16,20 +16,36 @@ const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
 
 const CurrentUtils = new CommandUtil();
 
+ // TODO actually work on the Client Remote Listener
+
 export class CommandWorker {
     Player: Player;
     Message: string;
     readonly LastCommand: string | null = "";
 
+    MuteClient: RemoteEvent;
+
     constructor(Player: Player, Message: string) {
         this.Player = Player;
         this.Message = Message;
 
-        // check if Data.Version is equal to the downloaded version from github
+        const NewMuteClientRemote = new Instance("RemoteEvent");
+        NewMuteClientRemote.Name = "MuteClientRemote";
+        NewMuteClientRemote.Parent = ReplicatedStorage;
+
+        this.MuteClient = NewMuteClientRemote;
     }
 
+    /* protected ModAutomate(mtype: string, Player: Player, Arguments: Array<string>) { // disabled for now
+        if (mtype == "mute") {
+            this.MuteClient.FireClient(Player, 0) // 0 mute, 1 unmute
+        }
+    } */
+
+    // Check if Player muted when HandleCommand called, if yes kick
+
     HandleCommand() {
-        if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) == true) {
+        if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) === true) {
             const Isolated = string.sub(this.Message, 2, this.Message.size());
             const Arguments = Isolated.split(" "); // Split into elements for easier manipulation
             
@@ -37,16 +53,16 @@ export class CommandWorker {
 
             // Should change :find(string) to equals
 
-            if (Arguments[1] != null) {
-                if (Arguments[1].find("log")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
+            if (Arguments[1] !== undefined) {
+                if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "log")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         // Use Chat for Broadcast Filtering
 
                         print(Arguments[2])
                     }
-                } else if (Arguments[1].find("barbecue")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
-                        let Reciever: string | null = null;
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "barbecue")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        let Reciever: string | undefined = undefined;
 
                         Players.GetPlayers().forEach(function(Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
@@ -54,13 +70,13 @@ export class CommandWorker {
                             }
                         });
 
-                        if (Reciever != null) {
+                        if (Reciever !== undefined) {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
                             HumanoidRootPart?.GetChildren().forEach(function(v, i) {
                                 let Found: boolean = false;
-                                var Fires = new Array<Fire>();
+                                let Fires = new Array<Fire>();
 
                                 if (v.IsA("Fire")) {
                                     Found = true;
@@ -68,7 +84,7 @@ export class CommandWorker {
                                     Fires.insert(Fires.size(), v);
                                 }
 
-                                if (Found == false) {
+                                if (Found === false) {
                                     const ThisFire = new Instance("Fire");
 
                                     ThisFire.Parent = HumanoidRootPart;
@@ -80,9 +96,9 @@ export class CommandWorker {
                             });
                         }
                     }
-                } else if (Arguments[1].find("smoke")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
-                        let Reciever: string | null = null;
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "smoke")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        let Reciever: string | undefined = undefined;
 
                         Players.GetPlayers().forEach(function(Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
@@ -90,13 +106,13 @@ export class CommandWorker {
                             }
                         });
 
-                        if (Reciever != null) {
+                        if (Reciever !== undefined) {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
                             HumanoidRootPart?.GetChildren().forEach(function(v, i) {
                                 let Found: boolean = false;
-                                var Smokes = new Array<Smoke>();
+                                let Smokes = new Array<Smoke>();
 
                                 if (v.IsA("Smoke")) {
                                     Found = true;
@@ -104,7 +120,7 @@ export class CommandWorker {
                                     Smokes.insert(Smokes.size(), v);
                                 }
 
-                                if (Found == false) {
+                                if (Found === false) {
                                     const ThisSmoke = new Instance("Smoke");
 
                                     ThisSmoke.Parent = HumanoidRootPart;
@@ -116,9 +132,9 @@ export class CommandWorker {
                             });
                         }
                     }
-                } else if (Arguments[1].find("glitter")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
-                        let Reciever: string | null = null;
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "glitter")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        let Reciever: string | undefined = undefined;
 
                         Players.GetPlayers().forEach(function(Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
@@ -126,13 +142,13 @@ export class CommandWorker {
                             }
                         });
 
-                        if (Reciever != null) {
+                        if (Reciever !== undefined) {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
                             HumanoidRootPart?.GetChildren().forEach(function(v, i) {
                                 let Found: boolean = false;
-                                var Sparkles = new Array<Sparkles>();
+                                let Sparkles = new Array<Sparkles>();
 
                                 if (v.IsA("Sparkles")) {
                                     Found = true;
@@ -140,7 +156,7 @@ export class CommandWorker {
                                     Sparkles.insert(Sparkles.size(), v);
                                 }
 
-                                if (Found == false) {
+                                if (Found === false) {
                                     const ThisSparkle = new Instance("Sparkles");
 
                                     ThisSparkle.Parent = HumanoidRootPart;
@@ -152,9 +168,9 @@ export class CommandWorker {
                             });
                         }
                     }
-                } else if (Arguments[1].find("fling")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
-                        let Reciever: string | null = null;
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "fling")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        let Reciever: string | undefined = undefined;
 
                         Players.GetPlayers().forEach(function(Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
@@ -162,7 +178,7 @@ export class CommandWorker {
                             }
                         });
 
-                        if (Reciever != null) {
+                        if (Reciever !== undefined) {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
@@ -176,9 +192,9 @@ export class CommandWorker {
                             coroutine.resume(ReloadCharacter_SeparateThread, Players.GetPlayerFromCharacter(Character));
                         }
                     }
-                } else if (Arguments[1].find("explode")) {
-                    if (Arguments[2] != null && Arguments[2] != "") {
-                        let Reciever: string | null = null;
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "explode")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        let Reciever: string | undefined = undefined;
 
                         Players.GetPlayers().forEach(function(Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
@@ -186,7 +202,7 @@ export class CommandWorker {
                             }
                         });
 
-                        if (Reciever != null) {
+                        if (Reciever !== undefined) {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | BasePart | undefined = Character?.FindFirstChild("HumanoidRootPart");
                             let Pos: Vector3 | undefined;
@@ -195,7 +211,7 @@ export class CommandWorker {
                                 Pos = HumanoidRootPart.Position;
                             }
 
-                            if (type(Pos) == "vector") {
+                            if (type(Pos) === "vector") {
                                 const Exp = new Instance("Explosion");
 
                                 Exp.Position = new Vector3(Pos?.X, Pos?.Y, Pos?.Z);
@@ -203,11 +219,11 @@ export class CommandWorker {
                             }
                         }
                     }
-                } else if (Arguments[1].find("shutdown")) {
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "shutdown")) {
                     Players.GetPlayers().forEach(function(Player, i) {
                         const Date = os.date("*t", os.time());
 
-                        Player.Kick(Data.Messages.ShutdownMessage.format(Player.Name, Player.UserId, Date.hour, Date.min, Date.day, Date.month, Date.year));
+                        Player.Kick(Settings.Messages.Shutdown.format(Player.Name, Player.UserId, Date.hour, Date.min, Date.day, Date.month, Date.year));
                     });
                 }
             } else {

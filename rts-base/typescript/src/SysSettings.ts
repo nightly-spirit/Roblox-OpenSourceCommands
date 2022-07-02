@@ -1,12 +1,16 @@
-export const Data = {
+export const Settings = {
     CommandSettings: {
         Prefix: "/"
     },
+
     Messages: {
-        ShutdownMessage: "Server Shutdown by %s - %s. Time of shutdown: %s:%s %s/%s/%s"
+        // Must be formattable string for good measures.
+        Shutdown: ""
     },
-    Important: {
-        DataStoreName: "UserData",
-        DataStoreKey: null // null = UserId - else it's the key you set
+
+    Data: {
+        DBName: "UserData",
+        DBAccKey: undefined, // Null === UserId else Player.Name + DBAccKey
+        WebhookURL: ""
     }
 }
