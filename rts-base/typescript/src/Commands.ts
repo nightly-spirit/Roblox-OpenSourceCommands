@@ -225,6 +225,86 @@ export class CommandWorker {
 
                         Player.Kick(Settings.Messages.Shutdown.format(Player.Name, Player.UserId, Date.hour, Date.min, Date.day, Date.month, Date.year));
                     });
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "walkspeed") || CurrentUtils.FindStringInCommandArgument(Arguments, 1, "ws")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        if (Arguments[2].lower() === "me" || Arguments[2].lower() === "myself") {
+                            const Character: Instance | undefined = this.Player.Character;
+                            const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
+
+                            if (Arguments[3] !== undefined && Arguments[3] !== "") {
+                                const WalkSpeed: number | undefined = tonumber(Arguments[3]);
+
+                                if (WalkSpeed !== undefined && WalkSpeed >= 0) {
+                                    if (Humanoid?.IsA("Humanoid")) {
+                                        Humanoid.WalkSpeed = WalkSpeed;
+                                    }
+                                }
+                            }
+                        } else {
+                            let Reciever: string | undefined = undefined;
+
+                            Players.GetPlayers().forEach(function(Player, i) {
+                                if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
+                                    Reciever = Player.Name;
+                                }
+                            });
+    
+                            if (Reciever !== undefined) {
+                                const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
+                                const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
+    
+                                if (Arguments[3] !== undefined && Arguments[3] !== "") {
+                                    const WalkSpeed: number | undefined = tonumber(Arguments[3]);
+    
+                                    if (WalkSpeed !== undefined && WalkSpeed >= 0) {
+                                        if (Humanoid?.IsA("Humanoid")) {
+                                            Humanoid.WalkSpeed = WalkSpeed;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "jumppower") || CurrentUtils.FindStringInCommandArgument(Arguments, 1, "jp")) {
+                    if (Arguments[2] !== undefined && Arguments[2] !== "") {
+                        if (Arguments[2].lower() === "me" || Arguments[2].lower() === "myself") {
+                            const Character: Instance | undefined = this.Player.Character;
+                            const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
+
+                            if (Arguments[3] !== undefined && Arguments[3] !== "") {
+                                const JumpPower: number | undefined = tonumber(Arguments[3]);
+
+                                if (JumpPower !== undefined && JumpPower >= 0) {
+                                    if (Humanoid?.IsA("Humanoid")) {
+                                        Humanoid.JumpPower = JumpPower;
+                                    }
+                                }
+                            }
+                        } else {
+                            let Reciever: string | undefined = undefined;
+
+                            Players.GetPlayers().forEach(function(Player, i) {
+                                if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
+                                    Reciever = Player.Name;
+                                }
+                            });
+    
+                            if (Reciever !== undefined) {
+                                const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
+                                const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
+    
+                                if (Arguments[3] !== undefined && Arguments[3] !== "") {
+                                    const JumpPower: number | undefined = tonumber(Arguments[3]);
+    
+                                    if (JumpPower !== undefined && JumpPower >= 0) {
+                                        if (Humanoid?.IsA("Humanoid")) {
+                                            Humanoid.JumpPower = JumpPower;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 return;

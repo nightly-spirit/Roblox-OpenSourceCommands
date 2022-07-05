@@ -76,21 +76,20 @@ export class CommandUtil {
         }
     }
 
-    
-
     FindStringInCommandArgument(t: Array<string>, i: number, String: string) {
-        let Result: LuaTuple<[number, number, ...(string | number)[]] | undefined[]>
+        let Result: LuaTuple<[number, number, ...(string | number)[]] | undefined[]> | undefined = undefined;
 
-        try {
+        const opResult = opcall(() => {
             Result = t[i].find(String);
-        } catch(e) {
-            error(e);
-            return 1;
-        }
+        })
 
-        if (Result !== undefined) {
-            return true;
+        if (opResult.success) {
+            if (Result !== {undefined} || Result !== undefined || Result[0] !== undefined) {
+                return true;
+            }
         } else {
+            error(opResult.error);
+
             return false;
         }
     }
