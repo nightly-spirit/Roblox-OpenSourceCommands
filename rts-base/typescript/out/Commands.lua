@@ -5,6 +5,7 @@ local Settings = TS.import(script, script.Parent, "SysSettings").Settings
 local Chat = game:GetService("Chat")
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
+local HttpService = game:GetService("HttpService")
 local DataStoreService = game:GetService("DataStoreService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ReloadCharacter_SeparateThread = coroutine.create(function(Player)

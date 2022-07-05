@@ -18,7 +18,7 @@ const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
 
 const CurrentUtils = new CommandUtil();
 
- // TODO actually work on the Client Remote Listener
+// TODO actually work on the Client Remote Listener
 
 export class CommandWorker {
     Player: Player;
@@ -50,7 +50,7 @@ export class CommandWorker {
         if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) === true) {
             const Isolated = string.sub(this.Message, 2, this.Message.size());
             const Arguments = Isolated.split(" "); // Split into elements for easier manipulation
-            
+
             // Arguments[3] usually holds text that needs to be concatenated
 
             // Should change :find(string) to equals
@@ -66,7 +66,7 @@ export class CommandWorker {
                     if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         let Reciever: string | undefined = undefined;
 
-                        Players.GetPlayers().forEach(function(Player, i) {
+                        Players.GetPlayers().forEach(function (Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                 Reciever = Player.Name;
                             }
@@ -76,7 +76,7 @@ export class CommandWorker {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
-                            HumanoidRootPart?.GetChildren().forEach(function(v, i) {
+                            HumanoidRootPart?.GetChildren().forEach(function (v, i) {
                                 let Found: boolean = false;
                                 let Fires = new Array<Fire>();
 
@@ -91,7 +91,7 @@ export class CommandWorker {
 
                                     ThisFire.Parent = HumanoidRootPart;
                                 } else {
-                                    Fires.forEach(function(c, _) {
+                                    Fires.forEach(function (c, _) {
                                         c.Destroy();
                                     });
                                 }
@@ -102,7 +102,7 @@ export class CommandWorker {
                     if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         let Reciever: string | undefined = undefined;
 
-                        Players.GetPlayers().forEach(function(Player, i) {
+                        Players.GetPlayers().forEach(function (Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                 Reciever = Player.Name;
                             }
@@ -112,7 +112,7 @@ export class CommandWorker {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
-                            HumanoidRootPart?.GetChildren().forEach(function(v, i) {
+                            HumanoidRootPart?.GetChildren().forEach(function (v, i) {
                                 let Found: boolean = false;
                                 let Smokes = new Array<Smoke>();
 
@@ -127,7 +127,7 @@ export class CommandWorker {
 
                                     ThisSmoke.Parent = HumanoidRootPart;
                                 } else {
-                                    Smokes.forEach(function(c, _) {
+                                    Smokes.forEach(function (c, _) {
                                         c.Destroy();
                                     });
                                 }
@@ -138,7 +138,7 @@ export class CommandWorker {
                     if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         let Reciever: string | undefined = undefined;
 
-                        Players.GetPlayers().forEach(function(Player, i) {
+                        Players.GetPlayers().forEach(function (Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                 Reciever = Player.Name;
                             }
@@ -148,7 +148,7 @@ export class CommandWorker {
                             const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                             const HumanoidRootPart: Instance | undefined = Character?.FindFirstChild("HumanoidRootPart");
 
-                            HumanoidRootPart?.GetChildren().forEach(function(v, i) {
+                            HumanoidRootPart?.GetChildren().forEach(function (v, i) {
                                 let Found: boolean = false;
                                 let Sparkles = new Array<Sparkles>();
 
@@ -163,7 +163,7 @@ export class CommandWorker {
 
                                     ThisSparkle.Parent = HumanoidRootPart;
                                 } else {
-                                    Sparkles.forEach(function(c, _) {
+                                    Sparkles.forEach(function (c, _) {
                                         c.Destroy();
                                     });
                                 }
@@ -174,7 +174,7 @@ export class CommandWorker {
                     if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         let Reciever: string | undefined = undefined;
 
-                        Players.GetPlayers().forEach(function(Player, i) {
+                        Players.GetPlayers().forEach(function (Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                 Reciever = Player.Name;
                             }
@@ -198,7 +198,7 @@ export class CommandWorker {
                     if (Arguments[2] !== undefined && Arguments[2] !== "") {
                         let Reciever: string | undefined = undefined;
 
-                        Players.GetPlayers().forEach(function(Player, i) {
+                        Players.GetPlayers().forEach(function (Player, i) {
                             if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                 Reciever = Player.Name;
                             }
@@ -222,7 +222,7 @@ export class CommandWorker {
                         }
                     }
                 } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "shutdown")) {
-                    Players.GetPlayers().forEach(function(Player, i) {
+                    Players.GetPlayers().forEach(function (Player, i) {
                         const Date = os.date("*t", os.time());
 
                         Player.Kick(Settings.Messages.Shutdown.format(Player.Name, Player.UserId, Date.hour, Date.min, Date.day, Date.month, Date.year));
@@ -245,19 +245,19 @@ export class CommandWorker {
                         } else {
                             let Reciever: string | undefined = undefined;
 
-                            Players.GetPlayers().forEach(function(Player, i) {
+                            Players.GetPlayers().forEach(function (Player, i) {
                                 if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                     Reciever = Player.Name;
                                 }
                             });
-    
+
                             if (Reciever !== undefined) {
                                 const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                                 const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
-    
+
                                 if (Arguments[3] !== undefined && Arguments[3] !== "") {
                                     const WalkSpeed: number | undefined = tonumber(Arguments[3]);
-    
+
                                     if (WalkSpeed !== undefined && WalkSpeed >= 0) {
                                         if (Humanoid?.IsA("Humanoid")) {
                                             Humanoid.WalkSpeed = WalkSpeed;
@@ -285,19 +285,19 @@ export class CommandWorker {
                         } else {
                             let Reciever: string | undefined = undefined;
 
-                            Players.GetPlayers().forEach(function(Player, i) {
+                            Players.GetPlayers().forEach(function (Player, i) {
                                 if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
                                     Reciever = Player.Name;
                                 }
                             });
-    
+
                             if (Reciever !== undefined) {
                                 const Character: Instance | undefined = Workspace.FindFirstChild(Reciever);
                                 const Humanoid: Instance | Humanoid | undefined = Character?.FindFirstChild("Humanoid");
-    
+
                                 if (Arguments[3] !== undefined && Arguments[3] !== "") {
                                     const JumpPower: number | undefined = tonumber(Arguments[3]);
-    
+
                                     if (JumpPower !== undefined && JumpPower >= 0) {
                                         if (Humanoid?.IsA("Humanoid")) {
                                             Humanoid.JumpPower = JumpPower;
