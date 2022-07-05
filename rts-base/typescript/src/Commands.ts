@@ -1,10 +1,12 @@
 import { CommandUtil } from "./CommandUtil";
 import { Settings } from "./SysSettings";
 import { Proxy } from "./Proxy";
+import { BuildTitleUI } from "./UI";
 
 const Chat = game.GetService("Chat");
 const Players = game.GetService("Players");
 const Workspace = game.GetService("Workspace");
+const HttpService = game.GetService("HttpService");
 const DataStoreService = game.GetService("DataStoreService");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
