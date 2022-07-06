@@ -1,3 +1,7 @@
+<div style="display: flex; align-items: center; justify-content: center">
+	<img src="uglyICON.png" alt="LOGO">
+</div>
+
 # Open Source Commands Module
 
 A TypeScript / Lua Roblox module for an easy implementation of chat keyword solutions. Multiple commands, frequent updates, customization, and more...

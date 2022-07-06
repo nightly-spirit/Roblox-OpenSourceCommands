@@ -1,6 +1,6 @@
 import { CommandUtil } from "./CommandUtil";
 import { Settings } from "./SysSettings";
-import { Proxy } from "./Proxy";
+import { Defs } from "./Def";
 import { BuildTitleUI } from "./UI";
 
 const Chat = game.GetService("Chat");
@@ -9,6 +9,11 @@ const Workspace = game.GetService("Workspace");
 const HttpService = game.GetService("HttpService");
 const DataStoreService = game.GetService("DataStoreService");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
+
+type CommandResponseBody = {
+    Status: number,
+    Content: string
+};
 
 const ReloadCharacter_SeparateThread = coroutine.create((Player: Player) => {
     task.wait(4);
@@ -46,7 +51,7 @@ export class CommandWorker {
 
     // Check if Player muted when HandleCommand called, if yes kick
 
-    HandleCommand() {
+    HandleCommand(){
         if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) === true) {
             const Isolated = string.sub(this.Message, 2, this.Message.size());
             const Arguments = Isolated.split(" "); // Split into elements for easier manipulation
@@ -302,6 +307,55 @@ export class CommandWorker {
                                         if (Humanoid?.IsA("Humanoid")) {
                                             Humanoid.JumpPower = JumpPower;
                                         }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "gravity") || CurrentUtils.FindStringInCommandArgument(Arguments, 1, "grv")) {
+                    if (Arguments[2] !== undefined || Arguments[2] !== "") {
+                        const GravityReqContent: number | undefined = tonumber(Arguments[2]);
+
+                        if (GravityReqContent !== undefined) {
+                            Workspace.Gravity = GravityReqContent;
+                        }
+                    } else {
+                        return {
+                            Status: 1,
+                            Content: "Missing Argument 2 from Gravity Command Call by " + this.Player.Name + " (" + this.Player.UserId + ")"
+                        }
+                    }
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "kick")) { // Early & untested
+                    if (Arguments[2] !== undefined || Arguments[2] !== "") {
+                        let Reciever: number | undefined = undefined;
+
+                        Players.GetPlayers().forEach((Player, i) => {
+                            if (Player.Name.find(Arguments[2]) || Player.DisplayName.find(Arguments[2])) {
+                                if (Player.Name !== this.Player.Name) {
+                                    Reciever = Player.UserId;
+                                }
+                            }
+                        });
+
+                        if (Reciever !== undefined) {
+                            if (Arguments[3] === undefined || Arguments[3] === "") {
+                                const RecieverPI: Player | undefined = Players.GetPlayerByUserId(Reciever);
+
+                                if (RecieverPI !== undefined) {
+                                    if (Settings.Messages.KickNoReason !== undefined) {
+                                        RecieverPI.Kick(string.format(Settings.Messages.KickNoReason));
+                                    } else {
+                                        RecieverPI.Kick(string.format(Defs.Messages.KickNoReason))
+                                    }
+                                }
+                            } else if (Arguments[3] !== " " && Arguments[3] !== undefined && Arguments[3] !== "") {
+                                const RecieverPI: Player | undefined = Players.GetPlayerByUserId(Reciever);
+
+                                if (RecieverPI !== undefined) {
+                                    if (Settings.Messages.KickReason !== undefined) {
+                                        RecieverPI.Kick(string.format(Settings.Messages.KickReason));
+                                    } else {
+                                        RecieverPI.Kick(string.format(Defs.Messages.KickReason));
                                     }
                                 }
                             }
