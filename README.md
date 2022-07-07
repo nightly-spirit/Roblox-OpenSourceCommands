@@ -1,4 +1,4 @@
-<div style="display: flex; align-items: center; justify-content: center">
+<div style="display: flex; align-items: center; justify-content: center;" align="center">
 	<img src="uglyICON.png" alt="LOGO">
 </div>
 
