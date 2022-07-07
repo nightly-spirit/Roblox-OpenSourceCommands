@@ -10,7 +10,7 @@ const HttpService = game.GetService("HttpService");
 const DataStoreService = game.GetService("DataStoreService");
 const ReplicatedStorage = game.GetService("ReplicatedStorage");
 
-type CommandResponseBody = {
+export type CommandResponseBody = {
     Status: number,
     Content: string
 };
@@ -43,15 +43,9 @@ export class CommandWorker {
         this.MuteClient = NewMuteClientRemote;
     }
 
-    /* protected ModAutomate(mtype: string, Player: Player, Arguments: Array<string>) { // disabled for now
-        if (mtype == "mute") {
-            this.MuteClient.FireClient(Player, 0) // 0 mute, 1 unmute
-        }
-    } */
-
     // Check if Player muted when HandleCommand called, if yes kick
 
-    HandleCommand(){
+    HandleCommand(): CommandResponseBody | undefined {
         if (CurrentUtils.CheckIfMessageIsCommandAsync(this.Message) === true) {
             const Isolated = string.sub(this.Message, 2, this.Message.size());
             const Arguments = Isolated.split(" "); // Split into elements for easier manipulation
@@ -325,7 +319,7 @@ export class CommandWorker {
                             Content: "Missing Argument 2 from Gravity Command Call by " + this.Player.Name + " (" + this.Player.UserId + ")"
                         }
                     }
-                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "kick")) { // Early & untested
+                } else if (CurrentUtils.FindStringInCommandArgument(Arguments, 1, "kick")) { // Early & untested command. Currently unusable
                     if (Arguments[2] !== undefined || Arguments[2] !== "") {
                         let Reciever: number | undefined = undefined;
 
@@ -350,6 +344,14 @@ export class CommandWorker {
                                 }
                             } else if (Arguments[3] !== " " && Arguments[3] !== undefined && Arguments[3] !== "") {
                                 const RecieverPI: Player | undefined = Players.GetPlayerByUserId(Reciever);
+
+                                let ExpectedReasonTable: string[] = [];
+
+                                for (let i = 3; i < Arguments.size(); i++) {
+                                    ExpectedReasonTable.push(Arguments[i]);
+                                }
+
+                                const Reason: string = ExpectedReasonTable.join(" ");
 
                                 if (RecieverPI !== undefined) {
                                     if (Settings.Messages.KickReason !== undefined) {
